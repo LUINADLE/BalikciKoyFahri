@@ -27,7 +27,7 @@ function HomePage() {
       <section style={{ height: '100vh', minHeight: 640, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <Img src={images.hero} alt={`${BRAND} — taze deniz ürünleri`} style={{ position: 'absolute', inset: 0 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(9,15,27,.74)' }}></div>
-        <div style={{ position: 'absolute', width: 800, height: 800, background: 'radial-gradient(circle,rgba(156,107,88,.07) 0%,transparent 65%)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' }}></div>
+        <div style={{ position: 'absolute', width: 'min(800px, 120vw)', height: 'min(800px, 120vw)', background: 'radial-gradient(circle,rgba(156,107,88,.07) 0%,transparent 65%)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' }}></div>
         <div className="wrap" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
             <div className="overline" style={{ ...fd(.1), marginBottom: '2rem' }}>{h.hero.overline}</div>
@@ -101,7 +101,7 @@ function HomePage() {
         <div className="wrap">
           <div className="g3">
             {grid.map((g, i) => (
-              <Img key={i} src={g.src} alt={`${BRAND} ${i + 1}`} style={{ height: g.h }} />
+              <Img key={i} className="gimg" src={g.src} alt={`${BRAND} ${i + 1}`} style={{ height: g.h }} />
             ))}
           </div>
         </div>

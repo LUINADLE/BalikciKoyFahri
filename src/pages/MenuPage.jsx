@@ -36,7 +36,7 @@ function MenuPage() {
 
       <section className="sec">
         <div className="wrap">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem' }}>
+          <div className="menu-grid">
             <div>
               <Sec data={m.sections.cold} />
               <Sec data={m.sections.hot} />

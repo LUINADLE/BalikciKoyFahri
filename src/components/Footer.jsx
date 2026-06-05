@@ -14,7 +14,7 @@ function Footer() {
   return (
     <footer style={{ background: 'var(--navy)', padding: '5rem 0 2.5rem', color: 'rgba(255,255,255,.48)' }}>
       <div className="wrap">
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '3rem', paddingBottom: '3.5rem', borderBottom: '1px solid rgba(255,255,255,.07)' }}>
+        <div className="footer-grid" style={{ paddingBottom: '3.5rem', borderBottom: '1px solid rgba(255,255,255,.07)' }}>
           <div>
             <div style={{ fontFamily: 'var(--srf)', fontSize: '2rem', fontStyle: 'italic', color: '#fff', marginBottom: '1.25rem', lineHeight: 1.1 }}>{BRAND}</div>
             <p style={{ fontSize: '.875rem', fontWeight: 300, maxWidth: 280, lineHeight: 1.85, marginBottom: '1.5rem' }}>{f.tagline}</p>
@@ -40,7 +40,7 @@ function Footer() {
             ))}
           </div>
         </div>
-        <div style={{ paddingTop: '1.75rem', display: 'flex', justifyContent: 'space-between', fontSize: '.72rem', letterSpacing: '.05em' }}>
+        <div style={{ paddingTop: '1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '.5rem 1.5rem', fontSize: '.72rem', letterSpacing: '.05em' }}>
           <span>© {yr} {BRAND}. {f.rights}</span>
           <span style={{ color: 'var(--bronze)', letterSpacing: '.15em', textTransform: 'uppercase' }}>{SHARED.region}</span>
         </div>

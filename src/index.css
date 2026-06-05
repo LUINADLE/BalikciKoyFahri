@@ -48,5 +48,35 @@ input,select,textarea{font-family:inherit}
 ::-webkit-scrollbar-thumb{background:var(--navy30);border-radius:2px}
 button{-webkit-tap-highlight-color:transparent}
 input[type="date"]::-webkit-calendar-picker-indicator{opacity:.4}
-@media(max-width:1024px){.wrap{padding:0 2rem}}
-@media(max-width:768px){.wrap{padding:0 1.25rem}:root{--nav:68px}.g2,.g3{grid-template-columns:1fr}}
+/* Responsive layout siniflari (varsayilan = masaustu) */
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:6rem;align-items:flex-start}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+/* Nav */
+.nav-desktop{display:flex;align-items:center;gap:1.5rem}
+.nav-burger{display:none}
+.nav-panel{position:fixed;top:var(--nav);left:0;right:0;z-index:290;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.07);flex-direction:column;align-items:stretch;padding:1.5rem 0;gap:.25rem}
+@media(max-width:1024px){
+  .wrap{padding:0 2rem}
+  .sec{padding:5.5rem 0}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2.5rem}
+  .contact-grid{gap:4rem}
+}
+@media(max-width:768px){
+  .wrap{padding:0 1.25rem}
+  :root{--nav:64px}
+  .g2,.g3{grid-template-columns:1fr}
+  .sec{padding:4rem 0}
+  .menu-grid,.contact-grid,.form-row{grid-template-columns:1fr;gap:2.5rem}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:1.75rem 2rem}
+  .gimg{height:260px!important}
+  .nav-desktop{display:none}
+  .nav-burger{display:flex}
+  .contact-side{position:static!important}
+  .contact-map{height:300px!important}
+  .map-card{left:1.25rem!important;right:1.25rem!important;bottom:1rem!important;padding:1rem 1.25rem!important}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr}
+}

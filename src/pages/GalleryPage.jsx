@@ -51,7 +51,7 @@ function GalleryPage() {
         <div className="wrap">
           <div className="g3">
             {grid.map((item, i) => (
-              <Img key={i} src={item.src} alt={`${BRAND} ${i + 1}`} style={{ height: item.h }} />
+              <Img key={i} className="gimg" src={item.src} alt={`${BRAND} ${i + 1}`} style={{ height: item.h }} />
             ))}
           </div>
           <p style={{ textAlign: 'center', fontSize: '.72rem', color: 'var(--muted)', marginTop: '1.5rem', letterSpacing: '.05em' }}>{g.caption}</p>

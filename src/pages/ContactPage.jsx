@@ -43,7 +43,7 @@ function ContactPage() {
 
       <section className="sec">
         <div className="wrap">
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '6rem', alignItems: 'flex-start' }}>
+          <div className="contact-grid">
             {/* FORM */}
             <div>
               {done ? (
@@ -55,7 +55,7 @@ function ContactPage() {
               ) : (
                 <form onSubmit={submit} noValidate>
                   <h2 style={{ fontFamily: 'var(--srf)', fontSize: '2rem', fontWeight: 400, marginBottom: '2.5rem' }}>{F.heading}</h2>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.75rem' }}>
+                  <div className="form-row" style={{ marginBottom: '1.75rem' }}>
                     <div>
                       <label style={lS}>{F.date}</label>
                       <input type="date" value={form.date} onChange={e => set('date', e.target.value)} onFocus={() => setFcs('date')} onBlur={() => setFcs(null)} style={iS('date')} />
@@ -81,7 +81,7 @@ function ContactPage() {
                       <span style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', pointerEvents: 'none', fontSize: '.7rem' }}>▾</span>
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.75rem' }}>
+                  <div className="form-row" style={{ marginBottom: '1.75rem' }}>
                     <div>
                       <label style={lS}>{F.name}</label>
                       <input value={form.name} onChange={e => set('name', e.target.value)} onFocus={() => setFcs('name')} onBlur={() => setFcs(null)} placeholder={F.namePh} style={iS('name')} />
@@ -113,7 +113,7 @@ function ContactPage() {
             </div>
 
             {/* SIDEBAR */}
-            <div style={{ position: 'sticky', top: 'calc(var(--nav) + 2rem)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div className="contact-side" style={{ position: 'sticky', top: 'calc(var(--nav) + 2rem)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ background: '#2D4A6B', padding: '2.5rem' }}>
                 <div style={{ fontSize: '.62rem', letterSpacing: '.2em', textTransform: 'uppercase', color: '#8EB4D4', marginBottom: '.75rem', fontFamily: 'var(--sans)' }}>{c.sidebar.groupTitle}</div>
                 <p style={{ fontSize: '.85rem', fontWeight: 300, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, marginBottom: '1.5rem' }}>{c.sidebar.groupBody}</p>
@@ -146,7 +146,7 @@ function ContactPage() {
       </section>
 
       {/* Map — gerçek Google Maps embed (API anahtarı gerektirmez) */}
-      <div style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
+      <div className="contact-map" style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
         <iframe
           title={c.mapTitle}
           src={MAP_SRC}
@@ -155,7 +155,7 @@ function ContactPage() {
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
         ></iframe>
-        <div style={{ position: 'absolute', bottom: '2rem', left: '3rem', background: 'var(--navy)', padding: '1.5rem 2rem', zIndex: 2, pointerEvents: 'none' }}>
+        <div className="map-card" style={{ position: 'absolute', bottom: '2rem', left: '3rem', background: 'var(--navy)', padding: '1.5rem 2rem', zIndex: 2, pointerEvents: 'none' }}>
           <div style={{ fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: 'var(--bronze)', marginBottom: '.4rem' }}>{BRAND}</div>
           <p style={{ fontSize: '.8rem', color: 'rgba(255,255,255,.65)', lineHeight: 1.7 }}>{SHARED.addressLines[0]}<br/>{SHARED.addressLines[1]}, {SHARED.addressLines[2]}</p>
         </div>
