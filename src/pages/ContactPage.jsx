@@ -2,6 +2,9 @@
 import React from 'react';
 import { useLang } from '../i18n.jsx';
 import { BRAND, SHARED } from '../data/content.js';
+import { createReservation } from '../admin/store.js';
+import { todayStr } from '../admin/dates.js';
+import { formatPhone, startsWithFive } from '../admin/phone.js';
 
 const ADDRESS = `${SHARED.addressLines.join(', ')}`;
 const MAP_SRC = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`;
@@ -16,20 +19,24 @@ function ContactPage() {
   const [done, setDone] = React.useState(false);
   const [errs, setErrs] = React.useState({});
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const today = todayStr();
 
   const iS = k => ({ width: '100%', background: 'transparent', border: 'none', borderBottom: `1px solid ${errs[k] ? '#B33A3A' : fcs === k ? 'var(--bronze)' : 'var(--cream-b)'}`, padding: '.65rem 0', fontSize: '.9rem', fontFamily: 'var(--sans)', fontWeight: 300, color: 'var(--navy)', outline: 'none', transition: 'border-color .25s', borderRadius: 0 });
   const lS = { fontFamily: 'var(--sans)', fontSize: '.62rem', fontWeight: 500, letterSpacing: '.2em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: '.35rem' };
 
-  // NOT: Rezervasyon henüz sunucuya gönderilmiyor — yalnızca istemci tarafı doğrulama
-  // + teşekkür ekranı. Gönderme entegrasyonu sonraki aşamada eklenecek.
+  // Rezervasyon Faz 1'de istemci tarafı mock store'a (localStorage) yazılır; admin
+  // paneli takvimine buradan "düşer". Faz 2'de createReservation içi Supabase'e
+  // bağlanacak (UI değişmeden). Doğrulama maili Resend ile o aşamada eklenecek.
   const submit = e => {
     e.preventDefault();
     const er = {};
     if (!form.name.trim()) er.name = true;
     if (!form.phone.trim()) er.phone = true;
-    if (!form.date) er.date = true;
+    else if (!startsWithFive(form.phone)) er.phone = 'invalid';
+    if (!form.date || form.date < today) er.date = true;
     if (Object.keys(er).length) { setErrs(er); return; }
     setErrs({});
+    createReservation(form);
     setDone(true);
   };
 
@@ -58,7 +65,7 @@ function ContactPage() {
                   <div className="form-row" style={{ marginBottom: '1.75rem' }}>
                     <div>
                       <label style={lS}>{F.date}</label>
-                      <input type="date" value={form.date} onChange={e => set('date', e.target.value)} onFocus={() => setFcs('date')} onBlur={() => setFcs(null)} style={iS('date')} />
+                      <input type="date" min={today} value={form.date} onChange={e => set('date', e.target.value)} onFocus={() => setFcs('date')} onBlur={() => setFcs(null)} style={iS('date')} />
                       {errs.date && <span style={{ fontSize: '.7rem', color: '#B33A3A' }}>{F.required}</span>}
                     </div>
                     <div>
@@ -89,8 +96,8 @@ function ContactPage() {
                     </div>
                     <div>
                       <label style={lS}>{F.phone}</label>
-                      <input value={form.phone} onChange={e => set('phone', e.target.value)} onFocus={() => setFcs('phone')} onBlur={() => setFcs(null)} placeholder={F.phonePh} style={iS('phone')} />
-                      {errs.phone && <span style={{ fontSize: '.7rem', color: '#B33A3A' }}>{F.required}</span>}
+                      <input value={form.phone} onChange={e => set('phone', formatPhone(e.target.value))} onFocus={() => setFcs('phone')} onBlur={() => setFcs(null)} placeholder={F.phonePh} style={iS('phone')} inputMode="numeric" />
+                      {errs.phone && <span style={{ fontSize: '.7rem', color: '#B33A3A' }}>{errs.phone === 'invalid' ? F.phoneInvalid : F.required}</span>}
                     </div>
                   </div>
                   <div style={{ marginBottom: '1.75rem' }}>

@@ -142,13 +142,13 @@ export const content = {
     contact: {
       title: `Rezervasyon &\nİletişim`,
       intro: `${BRAND}'de masanızı ayırtın ya da grup yemekleri ve özel etkinlikler için bize ulaşın.`,
-      done: { title: `Teşekkürler`, body: `Talebiniz alındı. 24 saat içinde iletişime geçeceğiz.`, urgent: `Acil:` },
+      done: { title: `Teşekkürler`, body: `Talebiniz alındı. En kısa süre içinde sizinle iletişime geçeceğiz.`, urgent: `Acil:` },
       form: {
         heading: `Online Rezervasyon`,
         date: `Tarih`, time: `Saat`, selectTime: `Saat Seçin`, party: `Kişi Sayısı`,
-        name: `Ad Soyad *`, namePh: `Ad Soyad`, phone: `Telefon *`, phonePh: `+90`,
+        name: `Ad Soyad *`, namePh: `Ad Soyad`, phone: `Telefon *`, phonePh: `5XX XXX XX XX`,
         eventType: `Etkinlik Türü`, notes: `Özel İstekler / Diyet`, notesPh: `Alerjiler, kutlama detayları, erişilebilirlik…`,
-        submit: `Rezervasyon Talep Et →`, required: `Zorunlu alan`,
+        submit: `Rezervasyon Talep Et →`, required: `Zorunlu alan`, phoneInvalid: `Telefon numarası 5 ile başlamalıdır.`,
         partySizes: [`1 Kişi`, `2 Kişi`, `3 Kişi`, `4 Kişi`, `5 Kişi`, `6 Kişi`, `7 Kişi`, `8 Kişi`, `9 Kişi`, `10 Kişi`, `10–20 Kişi`, `20–50 Kişi`, `50+ Kişi`],
         eventTypes: [[`individual`, `Bireysel`], [`group`, `Grup`], [`event`, `Özel Etkinlik`]],
       },
@@ -297,9 +297,9 @@ export const content = {
       form: {
         heading: `Online Reservation`,
         date: `Date`, time: `Time`, selectTime: `Select Time`, party: `Party Size`,
-        name: `Full Name *`, namePh: `First Last`, phone: `Contact Number *`, phonePh: `+90`,
+        name: `Full Name *`, namePh: `First Last`, phone: `Contact Number *`, phonePh: `5XX XXX XX XX`,
         eventType: `Event Type`, notes: `Special Requests / Dietary`, notesPh: `Allergies, occasion details, accessibility…`,
-        submit: `Request Reservation →`, required: `Required field`,
+        submit: `Request Reservation →`, required: `Required field`, phoneInvalid: `Phone number must start with 5.`,
         partySizes: [`1 Guest`, `2 Guests`, `3 Guests`, `4 Guests`, `5 Guests`, `6 Guests`, `7 Guests`, `8 Guests`, `9 Guests`, `10 Guests`, `10–20 Guests`, `20–50 Guests`, `50+ Guests`],
         eventTypes: [[`individual`, `Individual`], [`group`, `Group`], [`event`, `Special Event`]],
       },

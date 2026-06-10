@@ -7,6 +7,8 @@ import HomePage from './pages/HomePage.jsx';
 import MenuPage from './pages/MenuPage.jsx';
 import GalleryPage from './pages/GalleryPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
+import QRMenuPage from './pages/QRMenuPage.jsx';
+import AdminApp from './admin/AdminApp.jsx';
 
 // Rota değişiminde sayfayı başa kaydır.
 function ScrollToTop() {
@@ -18,6 +20,18 @@ function ScrollToTop() {
 }
 
 function App() {
+  const { pathname } = useLocation();
+
+  // Gizli admin paneli: public Nav/Footer/scroll davranışı olmadan kendi layout'unda.
+  if (pathname.startsWith('/admin')) {
+    return <AdminApp />;
+  }
+
+  // QR menüsü: masadaki müşteriye gösterilen standalone sayfa (Nav/Footer yok).
+  if (pathname.startsWith('/qr-menu')) {
+    return <QRMenuPage />;
+  }
+
   return (
     <>
       <ScrollToTop />
