@@ -10,7 +10,7 @@
 //   price: serbest metin ("450 ₺" / "Günün Fiyatı") — piyasa-fiyatı durumları için esnek.
 //   available: false → müşteri sayfasında "Tükendi".
 
-import { content } from '../data/content.js';
+import { QR_MENU_SEED } from '../data/qrMenuSeed.js';
 
 // Yayın (müşterinin gördüğü) ve taslak (admin'in düzenlediği) ayrı tutulur.
 // Düzenlemeler taslağa yazılır; "Kaydet" taslağı yayına kopyalar.
@@ -19,57 +19,15 @@ const VER_KEY = 'bf_qr_menu_seed';
 const DRAFT_KEY = 'bf_qr_menu_draft';     // taslak
 const DRAFT_VER_KEY = 'bf_qr_menu_draft_seed';
 // Seed içeriği değiştikçe artır → eski localStorage verisi yeni seed ile tazelenir.
-const SEED_VERSION = 1;
+// v2: placeholder (content.js) seed → gerçek menü (qrMenuSeed.js).
+// v3: isimler normalize edildi + İngilizce isim ve TR/EN açıklamalar eklendi.
+// v4: kategorilerin İngilizce adları eklendi.
+const SEED_VERSION = 4;
 
-// ── Seed: content.js menüsünden türetilir (TR + EN aynı sırada eşlenir). ──
-// Örnek fiyatlar; gerçek menü Faz 2'de aktarılınca güncellenecek (placeholder).
-const PRICES = {
-  cold: ['480 ₺', '520 ₺', '90 ₺', '460 ₺', '540 ₺'],
-  hot: ['620 ₺', '580 ₺', '560 ₺', '640 ₺', '590 ₺'],
-  wine: ['1.450 ₺', '2.200 ₺', '1.350 ₺', '780 ₺', '1.680 ₺'],
-};
-
-// İki dilin section.items dizilerini (aynı uzunluk/sıra) tek ürün dizisine birleştirir.
-function zipSection(catId, trSec, enSec) {
-  const prices = PRICES[catId] || [];
-  return trSec.items.map((it, i) => ({
-    id: `${catId}-${i}`,
-    catId,
-    name: { tr: it.name, en: enSec.items[i]?.name || it.name },
-    desc: { tr: it.desc || '', en: enSec.items[i]?.desc || '' },
-    price: prices[i] || '',
-    available: true,
-    order: i,
-  }));
-}
-
-// Günün balığı: açıklama olarak menşe (origin), fiyat olarak "Günün Fiyatı".
-function zipCatch(catId, trCatch, enCatch) {
-  return trCatch.items.map((it, i) => ({
-    id: `${catId}-${i}`,
-    catId,
-    name: { tr: it.name, en: enCatch.items[i]?.name || it.name },
-    desc: { tr: it.origin || '', en: enCatch.items[i]?.origin || '' },
-    price: trCatch.daily || 'Günün Fiyatı',
-    available: true,
-    order: i,
-  }));
-}
-
+// ── Seed: gerçek menü snapshot'ından gelir (src/data/qrMenuSeed.js). ──
+// Derin kopya döndür ki dönen ağaç sonradan mutasyona uğrayıp sabiti kirletmesin.
 function buildSeed() {
-  const tr = content.tr.menu;
-  const en = content.en.menu;
-  const categories = [
-    { id: 'cold', name: { tr: tr.sections.cold.title, en: en.sections.cold.title }, order: 0,
-      items: zipSection('cold', tr.sections.cold, en.sections.cold) },
-    { id: 'hot', name: { tr: tr.sections.hot.title, en: en.sections.hot.title }, order: 1,
-      items: zipSection('hot', tr.sections.hot, en.sections.hot) },
-    { id: 'catch', name: { tr: tr.catch.title, en: en.catch.title }, order: 2,
-      items: zipCatch('catch', tr.catch, en.catch) },
-    { id: 'wine', name: { tr: tr.sections.wine.title, en: en.sections.wine.title }, order: 3,
-      items: zipSection('wine', tr.sections.wine, en.sections.wine) },
-  ];
-  return { categories };
+  return JSON.parse(JSON.stringify(QR_MENU_SEED));
 }
 
 // ── Yayın (live) okuma/yazma: seed buradan üretilir; müşteri sayfası bunu görür.
