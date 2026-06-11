@@ -70,6 +70,17 @@ function genId(prefix) {
   return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
 }
 
+// Fiyatı Türkiye için normalize eder: sayısal bir değer girilmişse sonuna " ₺" ekler.
+// Boş → ''. Zaten para birimi (₺/TL/TRY) içeriyorsa ya da tamamen metinse (ör.
+// "Günün Fiyatı") olduğu gibi bırakır. Böylece admin'in ₺ yazmasına gerek kalmaz.
+export function normalizePrice(raw) {
+  const s = (raw || '').trim();
+  if (!s) return '';
+  if (/[₺$€£]/.test(s) || /\b(?:TL|TRY)\b/i.test(s)) return s;
+  if (/\d/.test(s)) return s + ' ₺';
+  return s;
+}
+
 // Kategorileri ve içlerindeki ürünleri order'a göre sıralı döndürür.
 function sorted(menu) {
   const cats = [...menu.categories].sort((a, b) => a.order - b.order);
@@ -147,7 +158,7 @@ export function createItem(catId, data = {}) {
     catId,
     name: { tr: (data.name?.tr || '').trim(), en: (data.name?.en || '').trim() },
     desc: { tr: (data.desc?.tr || '').trim(), en: (data.desc?.en || '').trim() },
-    price: (data.price || '').trim(),
+    price: normalizePrice(data.price),
     available: data.available !== false,
     order: cat.items.length,
   };
@@ -158,10 +169,11 @@ export function createItem(catId, data = {}) {
 
 export function updateItem(id, patch) {
   const menu = read();
+  const p = ('price' in patch) ? { ...patch, price: normalizePrice(patch.price) } : patch;
   for (const cat of menu.categories) {
     const i = cat.items.findIndex(it => it.id === id);
     if (i !== -1) {
-      cat.items[i] = { ...cat.items[i], ...patch };
+      cat.items[i] = { ...cat.items[i], ...p };
       write(menu);
       return cat.items[i];
     }

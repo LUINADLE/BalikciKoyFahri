@@ -11,6 +11,10 @@ import SlidePanel from './SlidePanel.jsx';
 
 const EMPTY_ITEM = { tr_name: '', en_name: '', tr_desc: '', en_desc: '', price: '', available: true };
 
+// Düzenlemede gösterim için kayıtlı fiyatın sonundaki para birimini soyar (admin
+// yalnız sayıyı görür/yazar). Kayıtta ₺ menuStore.normalizePrice ile geri eklenir.
+const stripCurrency = (s) => (s || '').replace(/\s*(?:₺|TL|TRY)\s*$/i, '').trim();
+
 // Müşteri sayfasının tam adresi (QR için).
 function qrUrl() {
   try { return window.location.origin + '/qr-menu'; } catch { return '/qr-menu'; }
@@ -304,7 +308,7 @@ function ItemPanel({ editing, onClose, onSaved }) {
     setForm(item ? {
       tr_name: item.name.tr, en_name: item.name.en,
       tr_desc: item.desc.tr, en_desc: item.desc.en,
-      price: item.price, available: item.available,
+      price: stripCurrency(item.price), available: item.available,
     } : EMPTY_ITEM);
   }, [open, item]);
 
@@ -348,7 +352,11 @@ function ItemPanel({ editing, onClose, onSaved }) {
           <div className="adm-field-row">
             <div className="adm-field">
               <label>Fiyat</label>
-              <input value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="450 ₺ / Günün Fiyatı" />
+              <div className="qadm-price-wrap">
+                <input value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="450" inputMode="decimal" />
+                {/* ₺ otomatik eklenir; metin (ör. "Günün Fiyatı") yazılırsa gösterilmez */}
+                {(form.price === '' || /\d/.test(form.price)) && <span className="qadm-price-cur" aria-hidden="true">₺</span>}
+              </div>
             </div>
             <div className="adm-field" style={{ display: 'flex', alignItems: 'flex-end' }}>
               <label className="adm-check" style={{ paddingBottom: '.6rem' }}>

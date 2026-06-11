@@ -163,6 +163,10 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.4}
 .adm-field label{display:block;font-family:var(--sans);font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--adm-dim);margin-bottom:.45rem}
 .adm-field input,.adm-field select,.adm-field textarea{width:100%;background:transparent;border:none;border-bottom:1px solid var(--adm-border);padding:.6rem 0;font-family:var(--sans);font-size:.9rem;font-weight:300;color:var(--adm-text);outline:none;transition:border-color .2s;border-radius:0}
 .adm-field input:focus,.adm-field select:focus,.adm-field textarea:focus{border-color:var(--bronze)}
+/* Fiyat alani: sag tarafta sabit ₺ gostergesi (admin yazmaz, otomatik eklenir) */
+.qadm-price-wrap{position:relative;display:flex;align-items:center}
+.qadm-price-wrap input{padding-right:1.6rem}
+.qadm-price-cur{position:absolute;right:.2rem;pointer-events:none;font-family:var(--sans);font-size:.9rem;color:var(--adm-dim)}
 /* Acilir select secenekleri: koyu temada beyaz-uzeri-beyaz olmasin diye acik zemin+renk */
 .adm-field select option{background:var(--adm-surface);color:var(--adm-text)}
 /* Koyu temada tarih secici takvim ikonu siyah kalmasin diye acik renge cevrilir */
