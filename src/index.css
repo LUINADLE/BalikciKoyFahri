@@ -298,13 +298,13 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.4}
   .qr-nav button{padding:.55rem 1rem;font-size:.7rem}
   .qr-cat{margin-bottom:2.25rem;scroll-margin-top:4rem}
   .qr-cat-title{font-size:1.5rem}
-  .qr-item-name{font-size:1.1rem}
-  .qr-item-price{font-size:1.05rem}
+  .qr-item-name{font-size:1.28rem}
+  .qr-item-price{font-size:1.22rem}
   .qr-top{right:1rem;bottom:1rem;padding:.65rem 1rem}
 }
 @media(max-width:480px){
   .qr-page{--qr-pad:.9rem;padding-top:1.25rem;padding-bottom:3rem}
   .qr-cat-title{font-size:1.35rem}
-  .qr-item-name{font-size:1.05rem}
-  .qr-item-price{font-size:1rem}
+  .qr-item-name{font-size:1.2rem}
+  .qr-item-price{font-size:1.15rem}
 }
