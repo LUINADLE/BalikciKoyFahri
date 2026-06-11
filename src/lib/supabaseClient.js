@@ -10,7 +10,8 @@
 //
 // ÖNEMLİ: Burada YALNIZCA public anahtar (anon) kullanılır. service_role ve
 // Resend gibi GİZLİ anahtarlar asla frontend'e (VITE_*) konmaz — onlar sadece
-// sunucu tarafı `api/reserve.js` içinde, Vercel ortam değişkenlerinden okunur.
+// sunucu tarafı `functions/api/reserve.js` içinde, Cloudflare Pages ortam
+// değişkenlerinden (Secret) okunur.
 
 import { createClient } from '@supabase/supabase-js';
 

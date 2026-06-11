@@ -1,0 +1,5 @@
+# Cloudflare Pages SPA fallback — BrowserRouter yolları (/qr-menu, /menu, /contact …)
+# doğrudan açıldığında veya yenilendiğinde index.html servis edilir.
+# /api/* istekleri önce Pages Functions (functions/) tarafından yakalanır,
+# bu catch-all'a düşmez.
+/*    /index.html   200

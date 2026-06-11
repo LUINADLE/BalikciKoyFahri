@@ -1,10 +1,13 @@
-// api/reserve.js — Vercel Serverless Function: rezervasyon kaydı + Resend bildirimi.
+// functions/api/reserve.js — Cloudflare Pages Function: rezervasyon kaydı + Resend bildirimi.
 //
-// NOT: Bu dosya yalnız VERCEL'de çalışır. Cloudflare Pages `/api`'yi yok sayar
-// (CF Functions `/functions` dizinindedir) ve Vite build'i `api/`'yi paketlemez —
-// dolayısıyla mevcut Cloudflare dağıtımı etkilenmez (inert).
+// Yol: POST /api/reserve  (Cloudflare Pages, functions/ dizinini otomatik yönlendirir)
 //
-// Gerekli ortam değişkenleri (Vercel panelinde — VITE_ DEĞİL, gizli):
+// NOT: Şimdilik ATIL. Frontend rezervasyonu localStorage mock'una yazıyor
+// (src/admin/store.js); bu uç henüz çağrılmıyor. Faz 2'de createReservation içi
+// bu uca bağlanacak. Ortam değişkenleri tanımlı değilken çağrılırsa 500 döner.
+//
+// Gerekli ortam değişkenleri (Cloudflare Pages → Settings → Environment variables;
+// gizli olanları Secret olarak gir — VITE_ DEĞİL):
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY,
 //   RESERVATION_FROM_EMAIL, RESERVATION_TO_EMAIL
 //
@@ -16,13 +19,11 @@ import { Resend } from 'resend';
 
 const esc = (s) => String(s ?? '').replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+const json = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
 
-  const body = typeof req.body === 'string' ? safeJson(req.body) : (req.body || {});
+export async function onRequestPost({ request, env }) {
+  const body = await request.json().catch(() => ({}));
   const name = (body.name || '').trim();
   const phone = (body.phone || '').trim();
   const date = (body.date || '').trim();
@@ -32,13 +33,13 @@ export default async function handler(req, res) {
   const notes = (body.notes || '').trim();
 
   if (!name || !phone || !date) {
-    return res.status(400).json({ error: 'Zorunlu alanlar eksik (ad, telefon, tarih).' });
+    return json({ error: 'Zorunlu alanlar eksik (ad, telefon, tarih).' }, 400);
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = env.SUPABASE_URL;
+  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceKey) {
-    return res.status(500).json({ error: 'Sunucu yapılandırması eksik (Supabase).' });
+    return json({ error: 'Sunucu yapılandırması eksik (Supabase).' }, 500);
   }
 
   // service_role → RLS bypass; sunucu tarafı güvenli ortamda.
@@ -51,14 +52,14 @@ export default async function handler(req, res) {
     .single();
 
   if (error) {
-    return res.status(500).json({ error: 'Rezervasyon kaydedilemedi: ' + error.message });
+    return json({ error: 'Rezervasyon kaydedilemedi: ' + error.message }, 500);
   }
 
   // Mail bildirimi — başarısız olsa bile rezervasyonu engellemez.
   try {
-    const apiKey = process.env.RESEND_API_KEY;
-    const from = process.env.RESERVATION_FROM_EMAIL;
-    const to = process.env.RESERVATION_TO_EMAIL;
+    const apiKey = env.RESEND_API_KEY;
+    const from = env.RESERVATION_FROM_EMAIL;
+    const to = env.RESERVATION_TO_EMAIL;
     if (apiKey && from && to) {
       const resend = new Resend(apiKey);
       await resend.emails.send({
@@ -82,9 +83,5 @@ export default async function handler(req, res) {
     // mail hatası yutulur; kayıt zaten alındı.
   }
 
-  return res.status(200).json({ ok: true, id: data.id });
-}
-
-function safeJson(s) {
-  try { return JSON.parse(s); } catch { return {}; }
+  return json({ ok: true, id: data.id });
 }
