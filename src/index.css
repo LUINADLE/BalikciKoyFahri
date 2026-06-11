@@ -254,7 +254,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.4}
 .qadm-item.drag-over-bottom{box-shadow:inset 0 -2px 0 var(--bronze)}
 
 /* ===== QR Menü — Müşteri sayfası (QRMenuPage, standalone) ===== */
-.qr-page{min-height:100vh;background:var(--cream);color:var(--navy);max-width:720px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.qr-page{--qr-pad:1.5rem;min-height:100vh;background:var(--cream);color:var(--navy);max-width:720px;margin:0 auto;padding:2.5rem var(--qr-pad) 4rem}
 .qr-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding-bottom:1.75rem;border-bottom:1px solid var(--cream-b);margin-bottom:1.5rem}
 .qr-lang{display:inline-flex;border:1px solid var(--cream-b);border-radius:20px;overflow:hidden;flex-shrink:0}
 .qr-lang button{background:none;border:none;color:var(--muted);padding:.4rem .85rem;font-family:var(--sans);font-size:.62rem;font-weight:600;letter-spacing:.1em;cursor:pointer;transition:background .2s,color .2s}
@@ -285,3 +285,26 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.4}
 .qr-page.qr-dark{--cream:#0F1E36;--cream-d:#16294a;--cream-b:rgba(255,255,255,.14);--navy:#F4F1EA;--body:rgba(255,255,255,.82);--muted:rgba(255,255,255,.55)}
 .qr-page.qr-dark .qr-item-badge{background:var(--bronze)}
 .qr-top.qr-dark{background:var(--bronze)}
+/* QR Menü — mobil (müşteriler çoğunlukla telefondan bakıyor) */
+@media(max-width:768px){
+  .qr-page{--qr-pad:1.1rem;padding-top:1.5rem;padding-bottom:3.5rem}
+  .qr-head{align-items:center;padding-bottom:1.1rem;margin-bottom:1.1rem}
+  .qr-actions{gap:.5rem}
+  .qr-lang button{padding:.5rem .9rem;font-size:.66rem}
+  .qr-theme-btn{width:40px;height:40px;font-size:1.05rem}
+  /* Kategori şeridi: üste yapışan, parmakla yatay kaydırılan tek satır */
+  .qr-nav{position:sticky;top:0;z-index:50;background:var(--cream);flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:.5rem;margin-left:calc(-1*var(--qr-pad));margin-right:calc(-1*var(--qr-pad));margin-bottom:1.25rem;padding:.7rem var(--qr-pad)}
+  .qr-nav::-webkit-scrollbar{display:none}
+  .qr-nav button{padding:.55rem 1rem;font-size:.7rem}
+  .qr-cat{margin-bottom:2.25rem;scroll-margin-top:4rem}
+  .qr-cat-title{font-size:1.5rem}
+  .qr-item-name{font-size:1.1rem}
+  .qr-item-price{font-size:1.05rem}
+  .qr-top{right:1rem;bottom:1rem;padding:.65rem 1rem}
+}
+@media(max-width:480px){
+  .qr-page{--qr-pad:.9rem;padding-top:1.25rem;padding-bottom:3rem}
+  .qr-cat-title{font-size:1.35rem}
+  .qr-item-name{font-size:1.05rem}
+  .qr-item-price{font-size:1rem}
+}
