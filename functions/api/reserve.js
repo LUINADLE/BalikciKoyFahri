@@ -1,10 +1,17 @@
-// functions/api/reserve.js — Cloudflare Pages Function: rezervasyon kaydı + Resend bildirimi.
+// functions/api/reserve.js — rezervasyon kaydı + Resend bildirimi (Faz 2 blueprint).
 //
-// Yol: POST /api/reserve  (Cloudflare Pages, functions/ dizinini otomatik yönlendirir)
+// Yol (hedef): POST /api/reserve
 //
-// NOT: Şimdilik ATIL. Frontend rezervasyonu localStorage mock'una yazıyor
-// (src/admin/store.js); bu uç henüz çağrılmıyor. Faz 2'de createReservation içi
-// bu uca bağlanacak. Ortam değişkenleri tanımlı değilken çağrılırsa 500 döner.
+// ⚠️ ÖNEMLİ — şu an OTOMATİK AKTİF DEĞİL. Bu proje Cloudflare'a "Workers + Static
+// Assets" olarak deploy ediliyor (kökteki wrangler.jsonc, `npx wrangler deploy`),
+// klasik Pages değil. `functions/` dizini yalnızca Cloudflare *Pages* kurulumunda
+// otomatik uca dönüşür. Bu uç devreye girsin diye Faz 2'de ya wrangler.jsonc'a bir
+// Worker `main` script'i + yönlendirme eklenmeli ya da gerçek Pages'e geçilmeli.
+// Bu dosya o zamana kadar yalnızca mantığı (Supabase insert + Resend mail) saklayan
+// bir taslaktır; hiçbir yerden çağrılmaz.
+//
+// NOT: Frontend rezervasyonu localStorage mock'una yazıyor (src/admin/store.js).
+// Ortam değişkenleri tanımlı değilken çağrılırsa 500 döner.
 //
 // Gerekli ortam değişkenleri (Cloudflare Pages → Settings → Environment variables;
 // gizli olanları Secret olarak gir — VITE_ DEĞİL):

@@ -4,10 +4,11 @@ Bu doküman, siteyi localStorage mock'tan gerçek veritabanına (Supabase) ve
 rezervasyon e-postasına (Resend) taşımak için adımları içerir. Önhazırlık
 dosyaları repoda hazır; bu adımları tamamlayınca Faz 2b kod bağlamasına geçilir.
 
-> Şu an site **Cloudflare Pages**'te ve localStorage ile çalışıyor. Aşağıdakiler
-> tamamlanana kadar davranış değişmez. Proje tamamen Cloudflare üzerinde
-> yapılandırılmıştır (Vercel'den çıkıldı); rezervasyon backend'i bir Cloudflare
-> Pages Function (`functions/api/reserve.js`) olarak hazırdır.
+> Şu an site Cloudflare'da **Workers + Static Assets** olarak (kökteki
+> `wrangler.jsonc`, `npx wrangler deploy`) ve localStorage ile çalışıyor.
+> Aşağıdakiler tamamlanana kadar davranış değişmez. Vercel'den çıkıldı.
+> SPA yönlendirmesi `wrangler.jsonc` → `assets.not_found_handling:
+> "single-page-application"` ile sağlanır (ayrı `_redirects` dosyasına gerek yok).
 
 ## Hazır gelen dosyalar
 - `src/lib/supabaseClient.js` — env tanımlıysa Supabase istemcisi, değilse `null` (inert).
@@ -15,8 +16,11 @@ dosyaları repoda hazır; bu adımları tamamlayınca Faz 2b kod bağlamasına g
 - `.env.local` — lokal değerler (gitignore'lu; sen doldur).
 - `supabase/migrations/0001_init.sql` — tablolar + RLS.
 - `supabase/seed_menu.sql` — menü verisi (12 kategori, 350 ürün; upsert).
-- `functions/api/reserve.js` — Cloudflare Pages Function: rezervasyon insert + Resend mail.
-- `public/_redirects` — Cloudflare Pages SPA fallback (`/* /index.html 200`).
+- `functions/api/reserve.js` — rezervasyon insert + Resend mail mantığı (Faz 2 taslağı).
+  **Uyarı:** Mevcut Workers Static Assets kurulumunda `functions/` dizini otomatik
+  uca dönüşmez (bu yalnızca klasik Cloudflare *Pages*'te geçerli). Devreye almak için
+  bkz. aşağıdaki "Cloudflare" adımı.
+- `wrangler.jsonc` — Workers Static Assets yapılandırması (assets dizini + SPA fallback).
 
 ## 1. Supabase
 1. https://supabase.com → yeni proje oluştur.
@@ -48,18 +52,25 @@ dosyaları repoda hazır; bu adımları tamamlayınca Faz 2b kod bağlamasına g
 | `RESERVATION_TO_EMAIL` | Sunucu (`functions/`) | — |
 
 - **Lokal:** değerleri `.env.local`'a yaz. (Bu dosya commit'lenmez.)
-- **Cloudflare Pages:** Project → Settings → **Environment variables**'a aynı
+- **Cloudflare:** Workers & Pages → `balikcikoyfahri` → Settings → **Variables**'a aynı
   değişkenleri gir. Gizli olanları (`SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`)
-  **Secret** olarak ekle. `.env.local`'ı yükleme. `VITE_` olanlar build'e gömülür
-  (Production + Preview ortamlarına eklemeyi unutma); gizliler yalnız fonksiyon
-  çalışırken okunur.
+  **Secret** olarak ekle. `.env.local`'ı yükleme. `VITE_` olanlar build'e gömülür;
+  gizliler yalnız sunucu (Worker) çalışırken okunur.
 
-## 4. Cloudflare Pages
-1. Repo zaten Cloudflare Pages'e bağlı. Build ayarı: build command `npm run build`,
-   output directory `dist`.
-2. Yukarıdaki ortam değişkenlerini gir (gizliler Secret).
-3. Deploy. `public/_redirects` SPA yönlendirmesini, `functions/api/reserve.js` ise
-   `POST /api/reserve` fonksiyonunu otomatik ayağa kaldırır.
+## 4. Cloudflare (Workers + Static Assets)
+1. Repo zaten Cloudflare'a bağlı: build command `npm run build`, deploy command
+   `npx wrangler deploy`, statik dosyalar `wrangler.jsonc` → `assets.directory` (`./dist/`).
+   SPA yönlendirmesi `assets.not_found_handling: "single-page-application"` ile çalışır.
+2. Ortam değişkenlerini gir: Cloudflare panel → Workers & Pages → `balikcikoyfahri` →
+   Settings → Variables. Gizli olanları (`SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`)
+   **Secret** olarak ekle.
+3. **Rezervasyon ucunu devreye al (Faz 2):** Workers Static Assets kurulumunda
+   `functions/` otomatik çalışmaz. İki seçenek:
+   - **a)** `wrangler.jsonc`'a bir Worker `main` script'i ekle; `/api/reserve` POST'unu
+     bu script'te karşıla (mantığı `functions/api/reserve.js`'ten taşı), statik
+     varlıklara `assets` binding ile devam et.
+   - **b)** Projeyi klasik **Cloudflare Pages**'e taşı; o zaman `functions/api/reserve.js`
+     olduğu gibi otomatik `POST /api/reserve` olur.
 4. Test: rezervasyon formunu doldur → Supabase `reservations` tablosunda kayıt +
    restoran adresine mail.
 
